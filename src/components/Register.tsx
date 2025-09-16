@@ -12,15 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthState from "@/hooks/useAuthState";
-import Link from "next/link";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const {
     email,
     setEmail,
     password,
     setPassword,
-    handleLogin,
+    handleRegister,
     errors,
     setErrors,
   } = useAuthState();
@@ -42,13 +41,13 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   type="email"
+                  placeholder="m@example.com"
+                  required
                   value={email}
                   onChange={(e) => {
                     setErrors({ email: "", password: "" });
                     setEmail(e.target.value);
                   }}
-                  placeholder="m@example.com"
-                  required
                 />
                 <Label>{errors.email}</Label>
               </div>
@@ -59,11 +58,11 @@ export default function LoginPage() {
                 <Input
                   id="password"
                   value={password}
+                  type="password"
                   onChange={(e) => {
                     setErrors({ email: "", password: "" });
                     setPassword(e.target.value);
                   }}
-                  type="password"
                   required
                 />
                 <Label>{errors.password}</Label>
@@ -72,14 +71,12 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" onClick={handleLogin}>
-            Login
+          <Button type="submit" className="w-full" onClick={handleRegister}>
+            Register
           </Button>
-          <Link href="/register" className="w-full inline-block">
-            <Button variant="outline" className="w-full">
-              Go To Register
-            </Button>
-          </Link>
+          <Button variant="outline" className="w-full">
+            Go To Login
+          </Button>
         </CardFooter>
       </Card>
     </div>

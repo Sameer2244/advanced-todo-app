@@ -1,8 +1,6 @@
-import { User } from "@/types/type";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "./mongodb";
 
-const users: Partial<User>[] = [];
 export async function getUsers() {
   const { db } = await connectToDatabase();
   return await db.collection("users").find({}).toArray();
@@ -14,11 +12,14 @@ export async function findUserByEmail(email: string) {
 }
 export async function registerUser(email: string, password: string) {
   const hashed = await bcrypt.hash(password, 10);
-  const user = { id: Date.now().toString(), email, password: hashed };
-  users.push(user);
+  const user: { email: string; password: string; id?: string } = {
+    email,
+    password: hashed,
+  };
   // add in mongodb
   const { db } = await connectToDatabase();
-  db.collection("users").insertOne(user);
+  const result = await db.collection("users").insertOne(user);
+  user.id = result.insertedId.toString();
   return user;
 }
 

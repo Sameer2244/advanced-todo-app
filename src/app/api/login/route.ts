@@ -14,7 +14,7 @@ export async function POST(req: Request) {
   const accessToken = generateAccessToken(user.id);
   const refreshToken = generateRefreshToken(user.id);
 
-  const res = NextResponse.json({ accessToken });
+  const res = NextResponse.json({ user });
   res.headers.append(
     "Set-Cookie",
     serialize("refreshToken", refreshToken, {
@@ -24,6 +24,14 @@ export async function POST(req: Request) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
   );
-
+  res.headers.append(
+    "Set-Cookie",
+    serialize("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+    })
+  );
   return res;
 }

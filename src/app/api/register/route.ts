@@ -19,11 +19,11 @@ export async function POST(req: Request) {
   }
 
   const user = await registerUser(email, password);
-  const accessToken = generateAccessToken(user.id);
-  const refreshToken = generateRefreshToken(user.id);
+  const accessToken = generateAccessToken(user.id!);
+  const refreshToken = generateRefreshToken(user.id!);
   const res = NextResponse.json({
     message: "User registered",
-    userId: user.id,
+    user,
   });
   res.headers.append(
     "Set-Cookie",
@@ -43,5 +43,6 @@ export async function POST(req: Request) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     })
   );
+  //return user data to save it in auth context or get it using get api in user route
   return res;
 }
