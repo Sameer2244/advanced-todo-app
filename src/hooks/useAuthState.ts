@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function useAuthState() {
@@ -7,6 +8,7 @@ export default function useAuthState() {
     email: "",
     password: "",
   });
+  const router = useRouter();
 
   async function handleLogin() {
     if (!validateEmail()) {
@@ -26,8 +28,8 @@ export default function useAuthState() {
       body: JSON.stringify({ email, password }),
     });
     const data = await res.json();
-    if (data.accessToken) {
-      localStorage.setItem("accessToken", data.accessToken);
+    if (data.user) {
+      router.push("/");
     }
     if (data?.error) {
       setErrors({ email: "", password: data.error });

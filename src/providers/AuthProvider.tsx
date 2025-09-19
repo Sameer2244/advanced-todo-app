@@ -11,10 +11,11 @@ export default function AuthProvider({
   // const getUserByRefreshToken
   const getUserByAccessToken = async () => {
     const response = await fetch("/api/verifyAccessToken", {
-      method: "POST",
+      method: "GET",
       credentials: "include",
     });
-    console.log(response);
+    const data = await response.json();
+    console.log(data);
   };
   useEffect(() => {
     getUserByAccessToken();

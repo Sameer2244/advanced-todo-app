@@ -4,7 +4,7 @@ import { parse } from "cookie";
 import { connectToDatabase } from "@/lib/mongodb";
 import { ObjectId } from "mongodb";
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
   const cookies = parse(req.headers.get("cookie") || "");
   const token = cookies.refreshToken;
 

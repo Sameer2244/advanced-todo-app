@@ -1,5 +1,7 @@
 import { verifyAccessToken } from "@/lib/auth";
+import { connectToDatabase } from "@/lib/mongodb";
 import { parse } from "cookie";
+import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -12,13 +14,11 @@ export async function GET(req: Request) {
 
   try {
     const data = verifyAccessToken(token) as { userId: string };
-    if (!data) {
-      return NextResponse.json(
-        { error: "Invalid access token" },
-        { status: 403 }
-      );
-    }
-    return NextResponse.json({ data });
+    const { db } = await connectToDatabase();
+    const user = await db
+      .collection("users")
+      .findOne({ _id: new ObjectId(data.userId) });
+    return NextResponse.json({ user });
   } catch {
     return NextResponse.json(
       { error: "Invalid access token" },
