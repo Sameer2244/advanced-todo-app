@@ -16,7 +16,8 @@ export default function Home() {
   }, []);
   const logout = async () => {
     const res = await fetchLogoutClient();
-    if (res) {
+    const response = await res.json();
+    if (response?.message) {
       router.replace("/login");
     }
   };
