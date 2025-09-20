@@ -15,13 +15,8 @@ export default function Home() {
     setTheme("light");
   }, []);
   const logout = async () => {
-    const res = await fetchLogoutClient();
-    const response = await res.json();
-    if (response?.message) {
-      setTimeout(() => {
-        router.replace("/login");
-      }, 2000);
-    }
+    await fetchLogoutClient();
+    window.location.href = "/login";
   };
   return (
     <div className="flex flex-col justify-center items-center w-full">
