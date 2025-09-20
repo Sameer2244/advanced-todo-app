@@ -83,11 +83,15 @@ export default function LoginPage() {
           </form>
         </CardContent>
         <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full" onClick={handleLogin}>
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            onClick={handleLogin}
+          >
             Login
           </Button>
           <Link href="/register" className="w-full inline-block">
-            <Button variant="outline" className="w-full">
+            <Button variant="outline" className="w-full cursor-pointer">
               Go To Register
             </Button>
           </Link>

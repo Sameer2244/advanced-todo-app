@@ -15,10 +15,8 @@ export default function Home() {
     setTheme("light");
   }, []);
   const logout = async () => {
-    const res = await fetchLogoutClient();
-    if (res.ok) {
-      router.replace("/login");
-    }
+    await fetchLogoutClient();
+    router.replace("/login");
   };
   return (
     <div className="flex flex-col justify-center items-center w-full">
@@ -41,8 +39,10 @@ export default function Home() {
               <LinkIcon size={20} />
             </Link>
           </div>
-          <div className="cursor-pointer">
-            <Button onClick={logout}>Logout</Button>
+          <div>
+            <Button className="cursor-pointer" onClick={logout}>
+              Logout
+            </Button>
           </div>
         </>
       ) : (
