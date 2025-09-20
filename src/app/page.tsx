@@ -35,7 +35,7 @@ export default function Home() {
               Find the source code of this page here here
             </p>
             <Link
-              href="https://github.com/iamshaunjp/nextjs-jwt-auth"
+              href="https://github.com/Sameer2244/advanced-todo-app"
               target="_blank"
             >
               <LinkIcon size={20} />

@@ -22,6 +22,6 @@ export interface DbConnection {
 
 export async function connectToDatabase(): Promise<DbConnection> {
   const client = await clientPromise;
-  const db = client.db("TodoDB");
+  const db = client.db("sample_mflix");
   return { db, client };
 }
