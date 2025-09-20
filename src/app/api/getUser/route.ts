@@ -18,7 +18,7 @@ export async function GET(req: Request) {
     const user = await db
       .collection("users")
       .findOne({ _id: new ObjectId(data.userId) });
-    return NextResponse.json({ user });
+    return NextResponse.json({ user: { _id: user?._id, email: user?.email } });
   } catch {
     return NextResponse.json(
       { error: "Invalid access token" },

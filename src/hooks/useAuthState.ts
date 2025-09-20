@@ -1,9 +1,12 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { fetchLoginClient, fetchRegisterClient } from "@/utils/authClient";
+import { useAuth } from "@/providers/AuthProvider";
 
 export default function useAuthState() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { getCurrentUser } = useAuth();
   const [errors, setErrors] = useState({
     email: "",
     password: "",
@@ -22,14 +25,11 @@ export default function useAuthState() {
       });
       return;
     }
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
+    const data = await fetchLoginClient(email, password);
     if (data.user) {
-      router.push("/");
+      // replace so user can't go back to login with back button
+      router.replace("/");
+      getCurrentUser();
     }
     if (data?.error) {
       setErrors({ email: "", password: data.error });
@@ -47,12 +47,7 @@ export default function useAuthState() {
       });
       return;
     }
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    const data = await res.json();
+    const data = await fetchRegisterClient(email, password);
     if (data.accessToken) {
       localStorage.setItem("accessToken", data.accessToken);
     }

@@ -1,28 +1,49 @@
 "use client";
 
 import { User } from "@/types/type";
-import { useState, createContext, useEffect, useContext } from "react";
+import { fetchGetCurrentUserClient } from "@/utils/authClient";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
-const AuthContext = createContext<{ user: User | null } | null>(null);
+type AuthContextShape = {
+  user: User | null;
+  loading: boolean;
+  getCurrentUser: () => Promise<void>;
+};
+
+const AuthContext = createContext<AuthContextShape | null>(null);
+
 export default function AuthProvider({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [user, setUser] = useState<User | null>(null); // userid , email, name  |||||||||| accesstoken and refresh token in cookie
-  // const getUserByRefreshToken
-  const getUserByAccessToken = async () => {
-    const response = await fetch("/api/verifyAccessToken", {
-      method: "GET",
-      credentials: "include",
-    });
-    const data = await response.json();
-    console.log(data);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  const getCurrentUser = async () => {
+    try {
+      const data = await fetchGetCurrentUserClient();
+      if (!data.user) {
+        router.replace("/login");
+      }
+      setUser(data.user ?? null);
+    } catch {
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
   };
+
   useEffect(() => {
-    getUserByAccessToken();
+    if (location.pathname !== "/login") getCurrentUser();
   }, []);
-  return (
-    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
+
+  const value = useMemo(
+    () => ({ user, loading, getCurrentUser }),
+    [user, loading]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {

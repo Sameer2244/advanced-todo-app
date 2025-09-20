@@ -1,8 +1,8 @@
+import AuthProvider from "@/providers/AuthProvider";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/providers/AuthProvider";
-import { ThemeProvider } from "@/providers/ThemeProvider";
 import { ModeToggle } from "@/components/ToogleTheme";
 
 const geistSans = Geist({
@@ -32,17 +32,16 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
           <div className="flex justify-between items-center w-[90vw] m-auto py-5">
-            <h1 className="scroll-m-20 text-center text-3xl font-extrabold tracking-tight text-balance">
-              Task Master
-            </h1>
-            <ModeToggle />
+            <div className="absolute top-4 right-4">
+              <ModeToggle />
+            </div>
+            <AuthProvider>{children}</AuthProvider>
           </div>
-          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
       </body>
     </html>

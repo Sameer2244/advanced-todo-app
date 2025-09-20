@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthState from "@/hooks/useAuthState";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const {
@@ -28,9 +29,9 @@ export default function RegisterPage() {
     <div className="w-full h-[80vh] flex justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Register to your account</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Enter your email below to register to your account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -74,9 +75,11 @@ export default function RegisterPage() {
           <Button type="submit" className="w-full" onClick={handleRegister}>
             Register
           </Button>
-          <Button variant="outline" className="w-full">
-            Go To Login
-          </Button>
+          <Link href="/login" className="block w-full">
+            <Button variant="outline" className="w-full ">
+              Go To Login
+            </Button>
+          </Link>
         </CardFooter>
       </Card>
     </div>

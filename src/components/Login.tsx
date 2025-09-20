@@ -12,6 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useAuthState from "@/hooks/useAuthState";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/providers/AuthProvider";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -24,6 +27,14 @@ export default function LoginPage() {
     errors,
     setErrors,
   } = useAuthState();
+  const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/");
+    }
+  }, [loading, user, router]);
 
   return (
     <div className="w-full h-[80vh] flex justify-center items-center">
