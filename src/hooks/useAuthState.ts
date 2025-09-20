@@ -48,8 +48,9 @@ export default function useAuthState() {
       return;
     }
     const data = await fetchRegisterClient(email, password);
-    if (data.accessToken) {
-      localStorage.setItem("accessToken", data.accessToken);
+    if (data?.user) {
+      router.replace("/");
+      getCurrentUser();
     }
   }
 

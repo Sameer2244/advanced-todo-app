@@ -23,7 +23,7 @@ export async function POST(req: Request) {
   const refreshToken = generateRefreshToken(user.id!);
   const res = NextResponse.json({
     message: "User registered",
-    user,
+    user: { _id: user.id, email: user.email },
   });
   res.headers.append(
     "Set-Cookie",
