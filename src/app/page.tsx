@@ -18,7 +18,9 @@ export default function Home() {
     const res = await fetchLogoutClient();
     const response = await res.json();
     if (response?.message) {
-      router.replace("/login");
+      setTimeout(() => {
+        router.replace("/login");
+      }, 2000);
     }
   };
   return (
