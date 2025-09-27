@@ -1,6 +1,6 @@
 import { MongoClient, Db, MongoClientOptions } from "mongodb";
 
-const uri: string = process.env.MONGODB_URI || "mongodb://localhost:27017";
+const uri: string = process.env.MONGODB_URI || "";
 const options: MongoClientOptions = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
@@ -22,6 +22,6 @@ export interface DbConnection {
 
 export async function connectToDatabase(): Promise<DbConnection> {
   const client = await clientPromise;
-  const db = client.db("sample_mflix");
+  const db = client.db("TodoDB");
   return { db, client };
 }

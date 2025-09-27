@@ -1,9 +1,9 @@
+import Header from "@/components/Header";
 import AuthProvider from "@/providers/AuthProvider";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ModeToggle } from "@/components/ToogleTheme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,19 +30,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="flex justify-between items-center w-[90vw] m-auto py-5">
-            <div className="absolute top-4 right-4">
-              <ModeToggle />
-            </div>
-            <AuthProvider>{children}</AuthProvider>
-          </div>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <div className="w-[80vw] max-w-[100rem] m-auto">{children}</div>
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

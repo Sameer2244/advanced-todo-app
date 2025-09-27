@@ -1,7 +1,10 @@
 "use client";
 
 import { User } from "@/types/type";
-import { fetchGetCurrentUserClient } from "@/utils/authClient";
+import {
+  fetchGetCurrentUserClient,
+  fetchLogoutClient,
+} from "@/utils/authClient";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
@@ -9,6 +12,7 @@ type AuthContextShape = {
   user: User | null;
   loading: boolean;
   getCurrentUser: () => Promise<void>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextShape | null>(null);
@@ -34,12 +38,16 @@ export default function AuthProvider({
     }
   };
 
+  const logout = async () => {
+    await fetchLogoutClient();
+    window.location.href = "/login";
+  };
   useEffect(() => {
     if (location.pathname !== "/login") getCurrentUser();
   }, []);
 
   const value = useMemo(
-    () => ({ user, loading, getCurrentUser }),
+    () => ({ user, loading, getCurrentUser, logout }),
     [user, loading]
   );
 

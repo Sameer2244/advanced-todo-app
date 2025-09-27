@@ -7,9 +7,8 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   const cookies = parse(req.headers.get("cookie") || "");
   const token = cookies.accessToken;
-
   if (!token) {
-    return NextResponse.json({ error: "No Access token" }, { status: 401 });
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
