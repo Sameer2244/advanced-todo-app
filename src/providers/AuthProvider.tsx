@@ -1,13 +1,15 @@
 "use client";
 
-import { User } from "@/types/type";
 import {
   fetchGetCurrentUserClient,
   fetchLogoutClient,
 } from "@/utils/authClient";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-
+type User = {
+  _id: string;
+  email: string;
+};
 type AuthContextShape = {
   user: User | null;
   loading: boolean;
@@ -31,6 +33,7 @@ export default function AuthProvider({
         router.replace("/login");
       }
       sessionStorage.setItem("userid", data?.user?._id);
+      sessionStorage.setItem("email", data?.user?.email);
       setUser(data.user ?? null);
     } catch {
       setUser(null);
@@ -45,8 +48,18 @@ export default function AuthProvider({
     window.location.href = "/login";
   };
   useEffect(() => {
-    if (location.pathname !== "/login" && !sessionStorage.getItem("userid"))
+    if (
+      location.pathname !== "/login" &&
+      !sessionStorage.getItem("userid") &&
+      !sessionStorage.getItem("email")
+    )
       getCurrentUser();
+    else {
+      setUser({
+        _id: sessionStorage.getItem("userid") as string,
+        email: sessionStorage.getItem("email") as string,
+      });
+    }
   }, []);
 
   const value = useMemo(
