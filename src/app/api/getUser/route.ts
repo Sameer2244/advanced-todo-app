@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const token = validateIncomingToken(req);
+  const token = await validateIncomingToken(req);
   try {
     const data = (await verifyAccessToken(token as string)) as {
       userId: string;

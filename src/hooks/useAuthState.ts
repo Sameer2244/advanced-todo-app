@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { fetchLoginClient, fetchRegisterClient } from "@/utils/authClient";
+import { fetchLoginClient, fetchRegisterClient } from "@/utils/clientAuth";
 import { useAuth } from "@/providers/AuthProvider";
 
 export default function useAuthState() {
@@ -27,7 +27,6 @@ export default function useAuthState() {
     }
     const data = await fetchLoginClient(email, password);
     if (data.user) {
-      // replace so user can't go back to login with back button
       router.replace("/");
       getCurrentUser();
     }

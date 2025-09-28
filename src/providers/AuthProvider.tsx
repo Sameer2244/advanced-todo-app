@@ -3,8 +3,8 @@
 import {
   fetchGetCurrentUserClient,
   fetchLogoutClient,
-} from "@/utils/authClient";
-import { useRouter } from "next/navigation";
+} from "@/utils/clientAuth";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 type User = {
   _id: string;
@@ -25,7 +25,7 @@ export default function AuthProvider({
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-
+  const pathname = usePathname();
   const getCurrentUser = async () => {
     try {
       const data = await fetchGetCurrentUserClient();
@@ -46,10 +46,13 @@ export default function AuthProvider({
   const logout = async () => {
     await fetchLogoutClient();
     sessionStorage.removeItem("userid");
+    sessionStorage.removeItem("email");
     window.location.href = "/login";
   };
   useEffect(() => {
-    getCurrentUser();
+    if (pathname !== "/login" && pathname !== "/register") {
+      getCurrentUser();
+    }
   }, []);
 
   const value = useMemo(

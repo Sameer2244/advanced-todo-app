@@ -1,5 +1,5 @@
 import { Task } from "@/types/type";
-import { cookies } from "next/headers";
+import { getServerCookies } from "@/utils/todoFetching";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -12,12 +12,7 @@ import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 
 export default async function QuickTodoCard() {
-  const cookieStore = await cookies();
-  const cookieArray = cookieStore.getAll ? cookieStore.getAll() : [];
-  const cookieHeader = cookieArray
-    .map((c) => `${c.name}=${c.value}`)
-    .join("; ");
-
+  const cookieHeader = await getServerCookies();
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/tasks`,
     {

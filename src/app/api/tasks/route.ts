@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    validateIncomingToken(req);
+    await validateIncomingToken(req);
     const { userid, projectid, title, priority, category, status } =
       await req.json();
     const { db } = await connectToDatabase();

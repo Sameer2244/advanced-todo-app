@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 export const fetchGetApi = async (url: string): Promise<unknown> => {
   const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${url}`, {
@@ -23,4 +24,10 @@ export const fetchPostApi = async (
   const response = await data.json();
   revalidatePath("/");
   return response;
+};
+
+export const getServerCookies = async () => {
+  const cookieStore = await cookies();
+  const cookieArray = cookieStore.getAll ? cookieStore.getAll() : [];
+  return cookieArray.map((c) => `${c.name}=${c.value}`).join("; ");
 };
