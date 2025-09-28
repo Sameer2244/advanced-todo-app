@@ -59,3 +59,10 @@ export interface DailyInsight {
   tasksCompleted: number;
   streakCount: number; // running streak
 }
+
+export type Todo = {
+  title: string;
+  priority: "Low" | "Medium" | "High";
+  category: string;
+  status: "Pending" | "Completed";
+};

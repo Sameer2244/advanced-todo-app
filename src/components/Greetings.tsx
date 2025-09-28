@@ -1,7 +1,9 @@
+"use client";
+
 import { useAuth } from "@/providers/AuthProvider";
 
 export default function Greetings() {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const todayDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",

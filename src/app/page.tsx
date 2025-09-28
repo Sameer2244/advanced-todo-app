@@ -1,4 +1,3 @@
-"use client";
 import FocusOfDay from "@/components/FocusOfDay";
 import Greetings from "@/components/Greetings";
 import ProductivityInsights from "@/components/ProductivityInsights";

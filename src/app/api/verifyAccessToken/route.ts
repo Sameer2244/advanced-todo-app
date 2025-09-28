@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   }
 
   try {
-    const data = verifyAccessToken(token) as { userId: string };
+    const data = (await verifyAccessToken(token)) as { userId: string };
     if (!data) {
       return NextResponse.json(
         { error: "Invalid access token" },

@@ -10,8 +10,8 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
-  const accessToken = generateAccessToken(user._id.toString());
-  const refreshToken = generateRefreshToken(user._id.toString());
+  const accessToken = await generateAccessToken(user._id.toString());
+  const refreshToken = await generateRefreshToken(user._id.toString());
 
   const res = NextResponse.json({ user: { _id: user._id, email: user.email } });
   res.headers.append(

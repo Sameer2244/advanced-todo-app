@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
+import AddQuickTodo from "./dialogs/AddQuickTodo";
 
 export default function QuickActions() {
   return (
@@ -13,6 +14,7 @@ export default function QuickActions() {
         <Button variant={"outline"} className="cursor-pointer">
           + Add New Project Task
         </Button>
+        <AddQuickTodo />
       </CardContent>
     </Card>
   );

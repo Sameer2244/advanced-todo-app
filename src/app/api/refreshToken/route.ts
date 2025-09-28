@@ -13,8 +13,8 @@ export async function GET(req: Request) {
   }
 
   try {
-    const payload = verifyRefreshToken(token) as { userId: string };
-    const accessToken = generateAccessToken(payload.userId);
+    const payload = verifyRefreshToken(token) as unknown as { userId: string };
+    const accessToken = await generateAccessToken(payload.userId);
     //also send user data
     const { db } = await connectToDatabase();
     const user = await db

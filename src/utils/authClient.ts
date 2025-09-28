@@ -1,3 +1,5 @@
+import { parse } from "cookie";
+
 export async function fetchGetCurrentUserClient() {
   const res = await fetch(`/api/getUser`, {
     credentials: "include",
@@ -39,3 +41,14 @@ export async function fetchLogoutClient() {
   const res = await fetch(`/api/logout`, { credentials: "include" });
   return res;
 }
+
+export const validateIncomingToken = (req: Request) => {
+  const cookies = parse(req.headers.get("cookie") || "");
+  const token = cookies.accessToken;
+  console.log(!token);
+  if (!token) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  } else {
+    return token;
+  }
+};

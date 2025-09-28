@@ -1,3 +1,4 @@
+import { fetchGetApi } from "@/utils/todoFetching";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -8,8 +9,12 @@ import {
 } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
+import { Task } from "@/types/type";
 
-export default function QuickTodoCard() {
+export default async function QuickTodoCard() {
+  const todos = (await fetchGetApi("/api/tasks")) as {
+    tasks: Task[];
+  };
   return (
     <Card>
       <CardHeader>
@@ -21,22 +26,12 @@ export default function QuickTodoCard() {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <Checkbox id="todo-1" />
-          <Label htmlFor="todo-1">Complete task</Label>
-        </div>
-        <div className="flex items-center gap-3">
-          <Checkbox id="todo-1" />
-          <Label htmlFor="todo-1">Resolve all the bugs</Label>
-        </div>
-        <div className="flex items-center gap-3">
-          <Checkbox id="todo-1" />
-          <Label htmlFor="todo-1">Deploy to production</Label>
-        </div>
-        <div className="flex items-center gap-3">
-          <Checkbox id="todo-1" />
-          <Label htmlFor="todo-1">Break the production</Label>
-        </div>
+        {todos?.tasks?.map((t) => (
+          <div key={t._id.toString()} className="flex items-center gap-3">
+            <Checkbox id={t._id.toString()} />
+            <Label htmlFor="todo-1">{t.title}</Label>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

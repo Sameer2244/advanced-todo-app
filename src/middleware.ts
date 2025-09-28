@@ -1,7 +1,8 @@
 import { parse, serialize } from "cookie";
-import { jwtVerify, SignJWT } from "jose";
+import { SignJWT } from "jose";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { verifyAccessToken } from "./lib/auth";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(req: NextRequest) {
@@ -20,10 +21,7 @@ export async function middleware(req: NextRequest) {
   // If user is trying to access login page and has valid access token, redirect to dashboard
   if (req.nextUrl.pathname === "/login" && accessToken) {
     try {
-      const isValid = await jwtVerify(
-        accessToken,
-        new TextEncoder().encode("access_secret")
-      );
+      const isValid = await verifyAccessToken(accessToken);
       if (isValid) {
         return NextResponse.redirect(dashboardUrl);
       }
@@ -40,10 +38,7 @@ export async function middleware(req: NextRequest) {
   // For all other routes, check authentication
   if (accessToken) {
     try {
-      const isValid = await jwtVerify(
-        accessToken,
-        new TextEncoder().encode("access_secret")
-      );
+      const isValid = await verifyAccessToken(accessToken);
       if (isValid) {
         return NextResponse.next();
       }
@@ -55,10 +50,9 @@ export async function middleware(req: NextRequest) {
   // Try to refresh access token using refresh token
   if (refreshToken) {
     try {
-      const payload = (await jwtVerify(
-        refreshToken,
-        new TextEncoder().encode("refresh_secret")
-      )) as unknown as { userId: string };
+      const payload = (await verifyAccessToken(refreshToken)) as unknown as {
+        userId: string;
+      };
 
       if (payload) {
         const newAccessToken = await new SignJWT(payload)

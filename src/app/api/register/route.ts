@@ -19,8 +19,8 @@ export async function POST(req: Request) {
   }
 
   const user = await registerUser(email, password);
-  const accessToken = generateAccessToken(user.id!);
-  const refreshToken = generateRefreshToken(user.id!);
+  const accessToken = await generateAccessToken(user.id!);
+  const refreshToken = await generateRefreshToken(user.id!);
   const res = NextResponse.json({
     message: "User registered",
     user: { _id: user.id, email: user.email },

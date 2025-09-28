@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JWT Auth",
-  description: "JWT Auth with Next.js",
+  title: "Advanced Todo App",
+  description: "Advanced Todo App with Next.js",
 };
 
 export default function RootLayout({

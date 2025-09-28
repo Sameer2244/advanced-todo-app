@@ -1,18 +1,15 @@
 import { verifyAccessToken } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
-import { parse } from "cookie";
+import { validateIncomingToken } from "@/utils/authClient";
 import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
-  const cookies = parse(req.headers.get("cookie") || "");
-  const token = cookies.accessToken;
-  if (!token) {
-    return Response.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+  const token = validateIncomingToken(req);
   try {
-    const data = verifyAccessToken(token) as { userId: string };
+    const data = (await verifyAccessToken(token as string)) as {
+      userId: string;
+    };
     const { db } = await connectToDatabase();
     const user = await db
       .collection("users")

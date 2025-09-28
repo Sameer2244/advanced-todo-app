@@ -1,17 +1,29 @@
-import jwt from "jsonwebtoken";
+import { SignJWT, jwtVerify } from "jose";
 
-export function generateAccessToken(userId: string) {
-  return jwt.sign({ userId }, "access_secret", { expiresIn: "15m" });
+// secrets must be Uint8Array (encoded from string)
+const accessSecret = new TextEncoder().encode("access_secret");
+const refreshSecret = new TextEncoder().encode("refresh_secret");
+
+export async function generateAccessToken(userId: string) {
+  return await new SignJWT({ userId })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("15m")
+    .sign(accessSecret);
 }
 
-export function generateRefreshToken(userId: string) {
-  return jwt.sign({ userId }, "refresh_secret", { expiresIn: "7d" });
+export async function generateRefreshToken(userId: string) {
+  return await new SignJWT({ userId })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("7d")
+    .sign(refreshSecret);
 }
 
-export function verifyAccessToken(token: string) {
-  return jwt.verify(token, "access_secret");
+export async function verifyAccessToken(token: string) {
+  const { payload } = await jwtVerify(token, accessSecret);
+  return payload; // contains { userId, exp, iat }
 }
 
-export function verifyRefreshToken(token: string) {
-  return jwt.verify(token, "refresh_secret");
+export async function verifyRefreshToken(token: string) {
+  const { payload } = await jwtVerify(token, refreshSecret);
+  return payload;
 }
