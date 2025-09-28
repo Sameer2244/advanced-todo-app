@@ -31,9 +31,10 @@ export default function AuthProvider({
       const data = await fetchGetCurrentUserClient();
       if (!data.user) {
         router.replace("/login");
+      } else {
+        sessionStorage.setItem("userid", data?.user?._id);
+        sessionStorage.setItem("email", data?.user?.email);
       }
-      sessionStorage.setItem("userid", data?.user?._id);
-      sessionStorage.setItem("email", data?.user?.email);
       setUser(data.user ?? null);
     } catch {
       setUser(null);
@@ -48,18 +49,7 @@ export default function AuthProvider({
     window.location.href = "/login";
   };
   useEffect(() => {
-    if (
-      location.pathname !== "/login" &&
-      !sessionStorage.getItem("userid") &&
-      !sessionStorage.getItem("email")
-    )
-      getCurrentUser();
-    else {
-      setUser({
-        _id: sessionStorage.getItem("userid") as string,
-        email: sessionStorage.getItem("email") as string,
-      });
-    }
+    getCurrentUser();
   }, []);
 
   const value = useMemo(

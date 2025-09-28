@@ -7,7 +7,6 @@ import { Button } from "./ui/button";
 
 export default function Header() {
   const { user, logout } = useAuth();
-  console.log(user);
   return (
     <div className="flex justify-between w-[80vw] m-auto py-5 items-centero">
       <h1 className="scroll-m-20 text-center text-4xl font-extrabold tracking-tight text-balance">
