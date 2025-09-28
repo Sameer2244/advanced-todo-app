@@ -18,8 +18,6 @@ import CustomDialog from "./CustomDialog";
 
 export default function AddQuickTodo() {
   const [show, setShow] = useState(false);
-  const { user } = useAuth();
-  console.log(user);
   const [todoData, setTodoData] = useState<Todo>({
     title: "",
     priority: "Low",
@@ -33,10 +31,16 @@ export default function AddQuickTodo() {
     if (validateForm()) {
       const response = await fetchPostApi("/api/tasks", {
         ...todoData,
-        userid: user?._id,
+        userid: sessionStorage.getItem("userid"),
       });
       if ((response as { status: number }).status === 201) {
         setShow(false);
+        setTodoData({
+          title: "",
+          priority: "Low",
+          status: "Pending",
+          category: "",
+        });
       }
     }
   };

@@ -1,5 +1,7 @@
+import { verifyAccessToken } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
 import { validateIncomingToken } from "@/utils/authClient";
+import { parse } from "cookie";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: Request) {
@@ -32,9 +34,19 @@ export async function POST(req: Request) {
 
 export async function GET(req: NextRequest) {
   try {
-    validateIncomingToken(req);
+    const cookies = parse(req.headers.get("cookie") || "");
+    const token = cookies.accessToken;
+    if (!token) {
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userid = (await verifyAccessToken(token)) as {
+      userId: string;
+    };
     const { db } = await connectToDatabase();
-    const tasks = await db.collection("tasks").find({}).toArray();
+    const tasks = await db
+      .collection("tasks")
+      .find({ userId: userid.userId })
+      .toArray();
     return NextResponse.json({ tasks });
   } catch (err) {
     console.log(err);

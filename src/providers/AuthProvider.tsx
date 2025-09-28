@@ -30,6 +30,7 @@ export default function AuthProvider({
       if (!data.user) {
         router.replace("/login");
       }
+      sessionStorage.setItem("userid", data?.user?._id);
       setUser(data.user ?? null);
     } catch {
       setUser(null);
@@ -40,10 +41,12 @@ export default function AuthProvider({
 
   const logout = async () => {
     await fetchLogoutClient();
+    sessionStorage.removeItem("userid");
     window.location.href = "/login";
   };
   useEffect(() => {
-    if (location.pathname !== "/login") getCurrentUser();
+    if (location.pathname !== "/login" && !sessionStorage.getItem("userid"))
+      getCurrentUser();
   }, []);
 
   const value = useMemo(

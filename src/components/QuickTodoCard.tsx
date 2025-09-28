@@ -1,4 +1,5 @@
-import { fetchGetApi } from "@/utils/todoFetching";
+import { Task } from "@/types/type";
+import { cookies } from "next/headers";
 import { Button } from "./ui/button";
 import {
   Card,
@@ -9,12 +10,25 @@ import {
 } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
-import { Task } from "@/types/type";
 
 export default async function QuickTodoCard() {
-  const todos = (await fetchGetApi("/api/tasks")) as {
-    tasks: Task[];
-  };
+  const cookieStore = await cookies();
+  const cookieArray = cookieStore.getAll ? cookieStore.getAll() : [];
+  const cookieHeader = cookieArray
+    .map((c) => `${c.name}=${c.value}`)
+    .join("; ");
+
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/tasks`,
+    {
+      method: "GET",
+      credentials: "include",
+      headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+      cache: "no-store",
+    }
+  );
+
+  const todos = (await res.json()) as { tasks: Task[] };
   return (
     <Card>
       <CardHeader>
@@ -26,12 +40,18 @@ export default async function QuickTodoCard() {
         </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {todos?.tasks?.map((t) => (
-          <div key={t._id.toString()} className="flex items-center gap-3">
-            <Checkbox id={t._id.toString()} />
-            <Label htmlFor="todo-1">{t.title}</Label>
-          </div>
-        ))}
+        {todos?.tasks?.length > 0 ? (
+          todos?.tasks?.map((t) => (
+            <div key={t._id.toString()} className="flex items-center gap-3">
+              <Checkbox id={t._id.toString()} />
+              <Label htmlFor="todo-1">{t.title}</Label>
+            </div>
+          ))
+        ) : (
+          <p className="leading-7 [&:not(:first-child)]:mt-6">
+            No todo available! please create your first todo from quick actions
+          </p>
+        )}
       </CardContent>
     </Card>
   );
