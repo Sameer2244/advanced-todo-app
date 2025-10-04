@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/providers/AuthProvider";
 import { Todo } from "@/types/type";
 import { fetchPostApi } from "@/utils/todoFetching";
 import { useState } from "react";

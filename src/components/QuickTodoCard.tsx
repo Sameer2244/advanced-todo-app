@@ -1,13 +1,6 @@
 import { Task } from "@/types/type";
 import { getServerCookies } from "@/utils/todoFetching";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 
@@ -28,11 +21,6 @@ export default async function QuickTodoCard() {
     <Card>
       <CardHeader>
         <CardTitle>Quick To-dos</CardTitle>
-        <CardAction>
-          <Button variant={"outline"} className="cursor-pointer">
-            large view
-          </Button>
-        </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         {todos?.tasks?.length > 0 ? (
