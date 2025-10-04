@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     await validateIncomingToken(req);
-    const { userid, projectid, title, priority, category, status } =
+    const { userid, projectid, title, priority, category, status, dueDate } =
       await req.json();
     const { db } = await connectToDatabase();
     db.collection("tasks")
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
         priority,
         category,
         status,
+        dueDate: dueDate,
         createdAt: new Date(),
         updatedAt: new Date(),
       })

@@ -1,22 +1,11 @@
 import { Task } from "@/types/type";
-import { getServerCookies } from "@/utils/todoFetching";
+import { fetchGetApi } from "@/utils/todoFetching";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 
 export default async function QuickTodoCard() {
-  const cookieHeader = await getServerCookies();
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/tasks`,
-    {
-      method: "GET",
-      credentials: "include",
-      headers: cookieHeader ? { cookie: cookieHeader } : undefined,
-      cache: "no-store",
-    }
-  );
-
-  const todos = (await res.json()) as { tasks: Task[] };
+  const todos = (await fetchGetApi("/api/tasks")) as { tasks: Task[] };
   return (
     <Card>
       <CardHeader>

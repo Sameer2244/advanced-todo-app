@@ -26,6 +26,7 @@ export interface Project {
   title: string;
   description?: string;
   status: "active" | "archived";
+  dueDate?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,10 +60,3 @@ export interface DailyInsight {
   tasksCompleted: number;
   streakCount: number; // running streak
 }
-
-export type Todo = {
-  title: string;
-  priority: "Low" | "Medium" | "High";
-  category: string;
-  status: "Pending" | "Completed";
-};

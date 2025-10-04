@@ -3,9 +3,12 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const fetchGetApi = async (url: string): Promise<unknown> => {
+  const cookieHeader = await getServerCookies();
   const data = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}${url}`, {
     credentials: "include",
     method: "GET",
+    headers: cookieHeader ? { cookie: cookieHeader } : undefined,
+    cache: "no-store",
   });
   const response = await data.json();
   return response;

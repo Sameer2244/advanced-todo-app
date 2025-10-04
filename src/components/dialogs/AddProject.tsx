@@ -1,10 +1,14 @@
 "use client";
 
-import { Project, Todo } from "@/types/type";
+import { Project } from "@/types/type";
 import { fetchPostApi } from "@/utils/todoFetching";
+import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Select,
   SelectContent,
@@ -13,15 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import CustomDialog from "./CustomDialog";
 import { Textarea } from "../ui/textarea";
+import CustomDialog from "./CustomDialog";
 
 export default function AddProject() {
   const [show, setShow] = useState(false);
+  const [open, setOpen] = useState(false);
   const [projectData, setProjectData] = useState<Partial<Project>>({
     title: "",
     description: "",
     status: "active",
+    dueDate: new Date(),
   });
   const validateForm = () => {
     return !!projectData.title && !!projectData.description;
@@ -82,6 +88,42 @@ export default function AddProject() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <div className="flex flex-col gap-3 w-full">
+              <Label htmlFor="date" className="px-1">
+                Due Date
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date"
+                    className="w-full justify-between font-normal"
+                  >
+                    {projectData.dueDate
+                      ? projectData.dueDate.toLocaleDateString()
+                      : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={projectData.dueDate ?? new Date()}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      setProjectData({
+                        ...projectData,
+                        dueDate: date,
+                      });
+                      setOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
             <Textarea
               placeholder="Project Description"
               value={projectData.description}

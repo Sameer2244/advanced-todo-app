@@ -1,6 +1,6 @@
 "use client";
 
-import { Todo } from "@/types/type";
+import { Task } from "@/types/type";
 import { fetchPostApi } from "@/utils/todoFetching";
 import { useState } from "react";
 import { Button } from "../ui/button";
@@ -14,14 +14,20 @@ import {
   SelectValue,
 } from "../ui/select";
 import CustomDialog from "./CustomDialog";
+import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { ChevronDownIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
 
 export default function AddQuickTodo() {
   const [show, setShow] = useState(false);
-  const [todoData, setTodoData] = useState<Todo>({
+  const [open, setOpen] = useState(false);
+  const [todoData, setTodoData] = useState<Partial<Task>>({
     title: "",
-    priority: "Low",
-    status: "Pending",
+    priority: "low",
+    status: "todo",
     category: "",
+    dueDate: new Date(),
   });
   const validateForm = () => {
     return !!todoData.title && !!todoData.category;
@@ -36,9 +42,10 @@ export default function AddQuickTodo() {
         setShow(false);
         setTodoData({
           title: "",
-          priority: "Low",
-          status: "Pending",
+          priority: "low",
+          status: "todo",
           category: "",
+          dueDate: new Date(),
         });
       }
     }
@@ -81,7 +88,7 @@ export default function AddQuickTodo() {
               onValueChange={(value) =>
                 setTodoData({
                   ...todoData,
-                  priority: value as "Low" | "Medium" | "High",
+                  priority: value as "low" | "medium" | "high",
                 })
               }
             >
@@ -90,9 +97,9 @@ export default function AddQuickTodo() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="Low">Low</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="High">High</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -102,7 +109,7 @@ export default function AddQuickTodo() {
               onValueChange={(value) =>
                 setTodoData({
                   ...todoData,
-                  status: value as "Pending" | "Completed",
+                  status: value as "todo" | "in-progress" | "completed",
                 })
               }
             >
@@ -111,11 +118,48 @@ export default function AddQuickTodo() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Completed">Completed</SelectItem>
+                  <SelectItem value="todo">Pending</SelectItem>
+                  <SelectItem value="in-progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <div className="flex flex-col gap-3 w-full">
+              <Label htmlFor="date" className="px-1">
+                Due Date
+              </Label>
+              <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    id="date"
+                    className="w-full justify-between font-normal"
+                  >
+                    {todoData.dueDate
+                      ? todoData.dueDate.toLocaleDateString()
+                      : "Select date"}
+                    <ChevronDownIcon />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent
+                  className="w-auto overflow-hidden p-0"
+                  align="start"
+                >
+                  <Calendar
+                    mode="single"
+                    selected={todoData.dueDate ?? new Date()}
+                    captionLayout="dropdown"
+                    onSelect={(date) => {
+                      setTodoData({
+                        ...todoData,
+                        dueDate: date,
+                      });
+                      setOpen(false);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         }
       />

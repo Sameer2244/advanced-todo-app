@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     await validateIncomingToken(req);
-    const { userId, title, description, status } = await req.json();
+    const { userId, title, description, status, dueDate } = await req.json();
     const { db } = await connectToDatabase();
     db.collection("projects")
       .insertOne({
@@ -15,6 +15,7 @@ export async function POST(req: Request) {
         title,
         description,
         status,
+        dueDate: dueDate,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
@@ -40,11 +41,11 @@ export async function GET(req: NextRequest) {
       userId: string;
     };
     const { db } = await connectToDatabase();
-    const tasks = await db
+    const projects = await db
       .collection("projects")
       .find({ userId: userid.userId })
       .toArray();
-    return NextResponse.json({ tasks });
+    return NextResponse.json({ projects });
   } catch (err) {
     console.log(err);
     return NextResponse.json({ message: "Error occured", status: 500 });
