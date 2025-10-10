@@ -1,5 +1,6 @@
 import { verifyAccessToken } from "@/lib/auth";
 import { connectToDatabase } from "@/lib/mongodb";
+import { Task, TaskQuery } from "@/types/type";
 import { validateIncomingToken } from "@/utils/authClient";
 import { parse } from "cookie";
 import { NextRequest, NextResponse } from "next/server";
@@ -35,23 +36,51 @@ export async function POST(req: Request) {
 
 export async function GET(req: NextRequest) {
   try {
+    const projectId = req.nextUrl.searchParams.get("projectId");
+    const hasProject = req.nextUrl.searchParams.get("hasProject");
+    const hasCompleted = req.nextUrl.searchParams.get("hasCompleted");
     const cookies = parse(req.headers.get("cookie") || "");
     const token = cookies.accessToken;
+
     if (!token) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
-    const userid = (await verifyAccessToken(token)) as {
-      userId: string;
-    };
+
+    const userid = (await verifyAccessToken(token)) as { userId: string };
     const { db } = await connectToDatabase();
-    const tasks = await db
+
+    // Build the query object
+    const query: TaskQuery = { userId: userid.userId };
+
+    if (hasProject === "true") {
+      if (projectId) {
+        query.projectId = projectId;
+      } else {
+        query.projectId = { $ne: null };
+      }
+    } else if (hasProject === "false") {
+      query.projectId = null;
+    } else if (projectId) {
+      query.projectId = projectId;
+    } else {
+      query.projectId = null;
+    }
+
+    if (hasCompleted === "true") {
+      query.completed = true;
+    } else if (hasCompleted === "false") {
+      query.completed = false;
+    }
+
+    const tasks: Task[] = (await db
       .collection("tasks")
-      .find({ userId: userid.userId })
+      .find(query)
       .map((t) => ({ ...t, _id: t._id.toString() }))
-      .toArray();
+      .toArray()) as unknown as Task[];
+
     return NextResponse.json({ tasks });
   } catch (err) {
     console.log(err);
-    return NextResponse.json({ message: "Error occured", status: 500 });
+    return NextResponse.json({ message: "Error occurred", status: 500 });
   }
 }

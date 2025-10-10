@@ -60,3 +60,8 @@ export interface DailyInsight {
   tasksCompleted: number;
   streakCount: number; // running streak
 }
+export interface TaskQuery {
+  userId: string;
+  projectId?: string | { $ne: null } | null;
+  completed?: boolean;
+}

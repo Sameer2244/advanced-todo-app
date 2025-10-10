@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Label } from "./ui/label";
 
 export default async function QuickTodoCard() {
-  const todos = (await fetchGetApi("/api/tasks")) as { tasks: Task[] };
+  const todos = (await fetchGetApi("/api/tasks?hasProject=false")) as {
+    tasks: Task[];
+  };
   const handleCompleteTask = async (taskId: string, status: string) => {
     "use server";
     await fetchPostApi("/api/tasks/complete", { taskId, status });

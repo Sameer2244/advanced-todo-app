@@ -48,6 +48,7 @@ export default function AddProjectTodo() {
     if (validateForm()) {
       const response = await fetchPostApi("/api/tasks", {
         ...todoData,
+        projectid: projectId,
         userid: sessionStorage.getItem("userid"),
       });
       if ((response as { status: number }).status === 201) {
