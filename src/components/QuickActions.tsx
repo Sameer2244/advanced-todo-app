@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
 import AddQuickTodo from "./dialogs/AddQuickTodo";
 import AddProject from "./dialogs/AddProject";
+import AddProjectTodo from "./dialogs/AddProjectTask";
 
 export default function QuickActions() {
   return (
@@ -12,9 +12,7 @@ export default function QuickActions() {
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <AddProject />
-        <Button variant={"outline"} className="cursor-pointer">
-          + Add New Project Task
-        </Button>
+        <AddProjectTodo />
         <AddQuickTodo />
       </CardContent>
     </Card>

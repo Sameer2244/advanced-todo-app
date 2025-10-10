@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
     const tasks = await db
       .collection("tasks")
       .find({ userId: userid.userId })
+      .map((t) => ({ ...t, _id: t._id.toString() }))
       .toArray();
     return NextResponse.json({ tasks });
   } catch (err) {

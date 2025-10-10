@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
     const projects = await db
       .collection("projects")
       .find({ userId: userid.userId })
+      .map((p) => ({ ...p, _id: p._id.toString() }))
       .toArray();
     return NextResponse.json({ projects });
   } catch (err) {
